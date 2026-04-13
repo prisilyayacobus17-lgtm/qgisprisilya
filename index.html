@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>MAP KABUPATEN BOLTIM</title>
+
+<link rel="stylesheet" href="css/leaflet.css">
+
+<style>
+/* BACKGROUND */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffe4ec, #f5d0c5);
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    padding: 20px;
+    color: #6b2d2d;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.header p {
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+/* CONTAINER */
+.container {
+    position: relative;
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    border: 4px solid #d48c8c;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 15px;
+}
+
+/* DESKRIPSI */
+.deskripsi {
+    background: #fff0f5;
+    border-left: 6px solid #c97b7b;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    color: #5a2a2a;
+}
+
+/* MAP */
+#map {
+    width: 100%;
+    height: 500px;
+    border-radius: 15px;
+    border: 3px solid #c97b7b;
+}
+
+/* KOMPAS BULAT */
+.kompas-bulat {
+    position: absolute;
+    top: 140px;
+    right: 30px;
+    width: 90px;
+    height: 90px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #5a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    font-weight: bold;
+}
+
+/* HURUF KOMPAS */
+.kompas-bulat span {
+    position: absolute;
+    font-size: 14px;
+    color: #5a2a2a;
+}
+
+.kompas-bulat .n { top: 5px; }
+.kompas-bulat .s { bottom: 5px; }
+.kompas-bulat .e { right: 5px; }
+.kompas-bulat .w { left: 5px; }
+
+/* KETERANGAN */
+.keterangan-kompas {
+    position: absolute;
+    top: 240px;
+    right: 30px;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #c97b7b;
+    font-size: 12px;
+    color: #5a2a2a;
+    z-index: 999;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    font-size: 12px;
+    padding: 10px;
+    color: #6b2d2d;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>MAP KABUPATEN BOLTIM</h1>
+    <p>Kecamatan Tutuyan</p>
+</div>
+
+<div class="container">
+
+    <div class="deskripsi">
+        <b>Deskripsi:</b><br>
+        Peta ini menampilkan wilayah administrasi Kecamatan Tutuyan yang berada di Kabupaten Bolaang Mongondow Timur. 
+        Peta ini menggunakan citra satelit untuk memberikan gambaran nyata kondisi wilayah, serta dilengkapi dengan 
+        batas administrasi yang dapat membantu dalam analisis geografis, perencanaan wilayah, dan pengambilan keputusan.
+    </div>
+
+    <div id="map"></div>
+
+    <!-- KOMPAS -->
+    <div class="kompas-bulat">
+        <span class="n">N</span>
+        <span class="s">S</span>
+        <span class="e">E</span>
+        <span class="w">W</span>
+    </div>
+
+    <!-- KETERANGAN -->
+    <div class="keterangan-kompas">
+        N = Utara<br>
+        S = Selatan<br>
+        E = Timur<br>
+        W = Barat
+    </div>
+
+</div>
+
+<div class="footer">
+    Dibuat oleh: <b>Prisilya Yacobus</b> | NIM: <b>241011060012</b>
+</div>
+
+<script src="js/leaflet.js"></script>
+<script src="data/ADMINISTRASIKECAMATAN_AR_50K_1.js"></script>
+
+<script>
+// MAP
+var map = L.map('map').fitBounds([
+    [0.6493344065851249,123.6389439058342],
+    [0.8920345875714825,124.01638429443254]
+]);
+
+// GOOGLE SATELLITE
+L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 28
+}).addTo(map);
+
+// STYLE
+function styleWilayah() {
+    return {
+        color: "#5a2a2a",
+        weight: 1,
+        fillColor: "#ffb6c1",
+        fillOpacity: 0.5
+    };
+}
+
+// POPUP
+function onEachFeature(feature, layer) {
+    layer.bindPopup("<b>Kecamatan:</b> " + feature.properties.WADMKC);
+}
+
+// LOAD DATA
+L.geoJSON(json_ADMINISTRASIKECAMATAN_AR_50K_1, {
+    style: styleWilayah,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
+</script>
+
+</body>
+</html>
