@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, width=device-width">
 
-<title>MAP KABUPATEN BOLTIM</title>
+<title>WEBGIS SAWAH KECAMATAN TUTUYAN</title>
 
 <link rel="stylesheet" href="css/leaflet.css">
 
@@ -65,49 +65,6 @@ body {
     border: 3px solid #c97b7b;
 }
 
-/* KOMPAS BULAT */
-.kompas-bulat {
-    position: absolute;
-    top: 140px;
-    right: 30px;
-    width: 90px;
-    height: 90px;
-    background: white;
-    border-radius: 50%;
-    border: 3px solid #5a2a2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    font-weight: bold;
-}
-
-/* HURUF KOMPAS */
-.kompas-bulat span {
-    position: absolute;
-    font-size: 14px;
-    color: #5a2a2a;
-}
-
-.kompas-bulat .n { top: 5px; }
-.kompas-bulat .s { bottom: 5px; }
-.kompas-bulat .e { right: 5px; }
-.kompas-bulat .w { left: 5px; }
-
-/* KETERANGAN */
-.keterangan-kompas {
-    position: absolute;
-    top: 240px;
-    right: 30px;
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    border: 2px solid #c97b7b;
-    font-size: 12px;
-    color: #5a2a2a;
-    z-index: 999;
-}
-
 /* FOOTER */
 .footer {
     text-align: center;
@@ -120,78 +77,99 @@ body {
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-    <h1>MAP KABUPATEN BOLTIM</h1>
-    <p>Kecamatan Tutuyan</p>
+    <h1>WEBGIS PEMETAAN SAWAH</h1>
+    <p>Kecamatan Tutuyan - Kabupaten Bolaang Mongondow Timur</p>
 </div>
 
+<!-- CONTAINER -->
 <div class="container">
 
+    <!-- DESKRIPSI -->
     <div class="deskripsi">
-        <b>Deskripsi:</b><br>
-        Peta ini menampilkan wilayah administrasi Kecamatan Tutuyan yang berada di Kabupaten Bolaang Mongondow Timur. 
-        Peta ini menggunakan citra satelit untuk memberikan gambaran nyata kondisi wilayah, serta dilengkapi dengan 
-        batas administrasi yang dapat membantu dalam analisis geografis, perencanaan wilayah, dan pengambilan keputusan.
+        <b>Deskripsi Website:</b><br><br>
+        Website ini berisi pemetaan sawah yang ada di Kecamatan Tutuyan, Kabupaten Bolaang Mongondow Timur. 
+        Peta ini bertujuan untuk memberikan informasi spasial mengenai persebaran area persawahan 
+        yang dapat digunakan untuk analisis pertanian, perencanaan wilayah, serta pengambilan keputusan 
+        berbasis data geografis.
     </div>
 
+    <!-- MAP -->
     <div id="map"></div>
-
-    <!-- KOMPAS -->
-    <div class="kompas-bulat">
-        <span class="n">N</span>
-        <span class="s">S</span>
-        <span class="e">E</span>
-        <span class="w">W</span>
-    </div>
-
-    <!-- KETERANGAN -->
-    <div class="keterangan-kompas">
-        N = Utara<br>
-        S = Selatan<br>
-        E = Timur<br>
-        W = Barat
-    </div>
 
 </div>
 
+<!-- FOOTER -->
 <div class="footer">
     Dibuat oleh: <b>Prisilya Yacobus</b> | NIM: <b>241011060012</b>
 </div>
 
+<!-- SCRIPT -->
+<script src="js/qgis2web_expressions.js"></script>
 <script src="js/leaflet.js"></script>
-<script src="data/ADMINISTRASIKECAMATAN_AR_50K_1.js"></script>
+<script src="js/L.Control.Layers.Tree.min.js"></script>
+<script src="js/leaflet.rotatedMarker.js"></script>
+<script src="js/leaflet.pattern.js"></script>
+<script src="js/leaflet-hash.js"></script>
+<script src="js/Autolinker.min.js"></script>
+<script src="js/rbush.min.js"></script>
+<script src="js/labelgun.min.js"></script>
+<script src="js/labels.js"></script>
+<script src="js/leaflet.photon.js"></script>
+<script src="data/ADMINISTRASIKABKOTA_AR_50K_1.js"></script>
+<script src="data/AGRISAWAH_AR_50K_2.js"></script>
 
 <script>
 // MAP
-var map = L.map('map').fitBounds([
-    [0.6493344065851249,123.6389439058342],
-    [0.8920345875714825,124.01638429443254]
-]);
+var map = L.map('map', {
+    zoomControl:true, maxZoom:28, minZoom:1
+}).fitBounds([[0.4958989867,124.20608663],[0.9195470863,124.75524288]]);
 
-// GOOGLE SATELLITE
+// BASEMAP GOOGLE SATELLITE
 L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 28
 }).addTo(map);
 
-// STYLE
-function styleWilayah() {
+// STYLE ADMIN
+function styleAdmin() {
     return {
         color: "#5a2a2a",
         weight: 1,
-        fillColor: "#ffb6c1",
-        fillOpacity: 0.5
+        fillColor: "#c97b7b",
+        fillOpacity: 0.4
     };
 }
 
-// POPUP
-function onEachFeature(feature, layer) {
-    layer.bindPopup("<b>Kecamatan:</b> " + feature.properties.WADMKC);
+// STYLE SAWAH
+function styleSawah() {
+    return {
+        color: "#3d7c47",
+        weight: 1,
+        fillColor: "#77c66e",
+        fillOpacity: 0.7
+    };
 }
 
-// LOAD DATA
-L.geoJSON(json_ADMINISTRASIKECAMATAN_AR_50K_1, {
-    style: styleWilayah,
-    onEachFeature: onEachFeature
+// POPUP ADMIN
+function popAdmin(feature, layer) {
+    layer.bindPopup("<b>Wilayah:</b> " + feature.properties.WADMKC);
+}
+
+// POPUP SAWAH
+function popSawah(feature, layer) {
+    layer.bindPopup("<b>Jenis Sawah:</b> " + feature.properties.JNSSWH);
+}
+
+// LOAD LAYER
+L.geoJSON(json_ADMINISTRASIKABKOTA_AR_50K_1, {
+    style: styleAdmin,
+    onEachFeature: popAdmin
+}).addTo(map);
+
+L.geoJSON(json_AGRISAWAH_AR_50K_2, {
+    style: styleSawah,
+    onEachFeature: popSawah
 }).addTo(map);
 
 </script>
