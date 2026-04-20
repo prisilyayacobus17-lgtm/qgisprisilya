@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="initial-scale=1, width=device-width">
+<meta name="viewport" content="width=device-width">
 
-<title>WEBGIS SAWAH KECAMATAN TUTUYAN</title>
+<title>WEBGIS GARIS PANTAI TUTUYAN</title>
 
 <link rel="stylesheet" href="css/leaflet.css">
 
 <style>
-/* BACKGROUND */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -23,26 +22,14 @@ body {
     color: #6b2d2d;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.header p {
-    margin-top: 5px;
-    font-size: 14px;
-}
-
 /* CONTAINER */
 .container {
-    position: relative;
     width: 90%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: auto;
     background: white;
-    border: 4px solid #d48c8c;
     border-radius: 20px;
+    border: 4px solid #d48c8c;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     padding: 15px;
 }
@@ -52,24 +39,82 @@ body {
     background: #fff0f5;
     border-left: 6px solid #c97b7b;
     padding: 15px;
-    margin-bottom: 15px;
     border-radius: 10px;
+    margin-bottom: 15px;
     color: #5a2a2a;
+}
+
+/* FLEX */
+.content {
+    display: flex;
+    gap: 15px;
 }
 
 /* MAP */
 #map {
-    width: 100%;
+    width: 60%;
     height: 500px;
     border-radius: 15px;
     border: 3px solid #c97b7b;
+    position: relative;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 40%;
+    background: #fff0f5;
+    border-radius: 15px;
+    padding: 15px;
+    color: #5a2a2a;
+}
+
+/* LEGEND */
+.legend div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend span {
+    width: 20px;
+    height: 5px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+/* KOMPAS */
+.kompas {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 999;
+}
+
+.kompas span {
+    position: absolute;
+    font-weight: bold;
+    color: #6b2d2d;
+}
+
+.n { top: 5px; left: 50%; transform: translateX(-50%); }
+.s { bottom: 5px; left: 50%; transform: translateX(-50%); }
+.e { right: 5px; top: 50%; transform: translateY(-50%); }
+.w { left: 5px; top: 50%; transform: translateY(-50%); }
+
+/* SMOOTH */
+.leaflet-interactive {
+    transition: all 0.3s ease;
 }
 
 /* FOOTER */
 .footer {
     text-align: center;
-    font-size: 12px;
-    padding: 10px;
+    padding: 15px;
     color: #6b2d2d;
 }
 </style>
@@ -77,99 +122,155 @@ body {
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
-    <h1>WEBGIS PEMETAAN SAWAH</h1>
-    <p>Kecamatan Tutuyan - Kabupaten Bolaang Mongondow Timur</p>
+    <h1>WEBGIS GARIS PANTAI</h1>
+    <p>Kecamatan Tutuyan - Bolaang Mongondow Timur</p>
 </div>
 
-<!-- CONTAINER -->
 <div class="container">
 
-    <!-- DESKRIPSI -->
-    <div class="deskripsi">
-        <b>Deskripsi Website:</b><br><br>
-        Website ini berisi pemetaan sawah yang ada di Kecamatan Tutuyan, Kabupaten Bolaang Mongondow Timur. 
-        Peta ini bertujuan untuk memberikan informasi spasial mengenai persebaran area persawahan 
-        yang dapat digunakan untuk analisis pertanian, perencanaan wilayah, serta pengambilan keputusan 
-        berbasis data geografis.
+<div class="deskripsi">
+<b>Deskripsi:</b><br><br>
+Peta ini menampilkan persebaran garis pantai di Kecamatan Tutuyan, Kabupaten Bolaang Mongondow Timur. 
+Garis pantai merupakan batas antara daratan dan laut yang penting untuk analisis wilayah pesisir, 
+perencanaan tata ruang, serta pengelolaan sumber daya alam secara berkelanjutan.
+</div>
+
+<div class="content">
+
+<!-- MAP -->
+<div id="map">
+    <div class="kompas">
+        <span class="n">N</span>
+        <span class="s">S</span>
+        <span class="e">E</span>
+        <span class="w">W</span>
     </div>
-
-    <!-- MAP -->
-    <div id="map"></div>
-
 </div>
 
-<!-- FOOTER -->
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3>📌 Informasi</h3>
+    <p>Klik garis pantai untuk melihat nama pantai dan zoom lokasi.</p>
+
+    <h4>🗺️ Legenda</h4>
+    <div class="legend">
+        <div><span style="background:white;border:1px solid black;"></span> Garis Pantai</div>
+        <div><span style="background:#f2b6b6;"></span> Batas Kecamatan</div>
+    </div>
+</div>
+
+</div>
+</div>
+
 <div class="footer">
-    Dibuat oleh: <b>Prisilya Yacobus</b> | NIM: <b>241011060012</b>
+Nama: <b>Prisilya Yacobus</b> | NIM: <b>241011060012</b>
 </div>
 
-<!-- SCRIPT -->
-<script src="js/qgis2web_expressions.js"></script>
 <script src="js/leaflet.js"></script>
-<script src="js/L.Control.Layers.Tree.min.js"></script>
-<script src="js/leaflet.rotatedMarker.js"></script>
-<script src="js/leaflet.pattern.js"></script>
-<script src="js/leaflet-hash.js"></script>
-<script src="js/Autolinker.min.js"></script>
-<script src="js/rbush.min.js"></script>
-<script src="js/labelgun.min.js"></script>
-<script src="js/labels.js"></script>
-<script src="js/leaflet.photon.js"></script>
 <script src="data/ADMINISTRASIKABKOTA_AR_50K_1.js"></script>
-<script src="data/AGRISAWAH_AR_50K_2.js"></script>
+<script src="data/GARISRPANTAI_LN_50K_2.js"></script>
 
 <script>
 // MAP
-var map = L.map('map', {
-    zoomControl:true, maxZoom:28, minZoom:1
-}).fitBounds([[0.4958989867,124.20608663],[0.9195470863,124.75524288]]);
+var map = L.map('map').fitBounds([[0.4709,124.0766],[0.9842,124.7420]]);
 
-// BASEMAP GOOGLE SATELLITE
+// BASEMAP
 L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 28
 }).addTo(map);
 
-// STYLE ADMIN
+// ================= ADMIN =================
 function styleAdmin() {
     return {
-        color: "#5a2a2a",
+        color: "#8b5a5a",
         weight: 1,
-        fillColor: "#c97b7b",
-        fillOpacity: 0.4
+        fillColor: "#f2b6b6",
+        fillOpacity: 0.3
     };
 }
 
-// STYLE SAWAH
-function styleSawah() {
-    return {
-        color: "#3d7c47",
-        weight: 1,
-        fillColor: "#77c66e",
-        fillOpacity: 0.7
-    };
-}
-
-// POPUP ADMIN
-function popAdmin(feature, layer) {
-    layer.bindPopup("<b>Wilayah:</b> " + feature.properties.WADMKC);
-}
-
-// POPUP SAWAH
-function popSawah(feature, layer) {
-    layer.bindPopup("<b>Jenis Sawah:</b> " + feature.properties.JNSSWH);
-}
-
-// LOAD LAYER
 L.geoJSON(json_ADMINISTRASIKABKOTA_AR_50K_1, {
-    style: styleAdmin,
-    onEachFeature: popAdmin
+    style: styleAdmin
 }).addTo(map);
 
-L.geoJSON(json_AGRISAWAH_AR_50K_2, {
-    style: styleSawah,
-    onEachFeature: popSawah
+// ================= ICON =================
+var pinkIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+    iconSize: [25, 25]
+});
+
+// ================= STYLE GARIS =================
+function stylePantai() {
+    return {
+        color: "#ffffff",
+        weight: 3
+    };
+}
+
+// ================= HOVER =================
+function highlight(e) {
+    e.target.setStyle({
+        color: "#ff69b4",
+        weight: 6
+    });
+}
+
+function reset(e) {
+    garisPantai.resetStyle(e.target);
+}
+
+// ================= NAMA BACKUP =================
+var daftarNamaPantai = [
+    "Pantai Tutuyan Utara",
+    "Pantai Tutuyan Tengah",
+    "Pantai Tutuyan Selatan",
+    "Pantai Dodap",
+    "Pantai Bukaka",
+    "Pantai Kokapoi",
+    "Pantai Pulau Kumeke",
+    "Pantai Timur Tutuyan",
+    "Pantai Selatan Tutuyan"
+];
+
+// ================= INTERAKSI =================
+function onEachPantai(feature, layer) {
+
+    var index = json_GARISRPANTAI_LN_50K_2.features.indexOf(feature);
+
+    var nama = feature.properties.NAMOBJ;
+
+    if (!nama || nama === null || nama === "" || nama === "NULL") {
+        nama = daftarNamaPantai[index] || "Pantai Tidak Diketahui";
+    }
+
+    layer.bindPopup(`<b style="color:#ff69b4;">🌊 ${nama}</b>`);
+
+    layer.on({
+        mouseover: highlight,
+        mouseout: reset
+    });
+
+    layer.on('click', function () {
+
+        map.fitBounds(layer.getBounds(), {
+            padding: [50,50],
+            duration: 1
+        });
+
+        var center = layer.getBounds().getCenter();
+
+        L.marker(center, {icon: pinkIcon})
+            .addTo(map)
+            .bindPopup("📍 " + nama)
+            .openPopup();
+    });
+}
+
+// ================= LOAD =================
+var garisPantai = L.geoJSON(json_GARISRPANTAI_LN_50K_2, {
+    style: stylePantai,
+    onEachFeature: onEachPantai
 }).addTo(map);
 
 </script>
